@@ -6,10 +6,10 @@
 ###########################################################
 # APPLICATION SETTINGS                                    #
 ###########################################################
- app_base_auth_login: login
- app_base_auth_pass: pass
+# app_base_auth_login: login
+# app_base_auth_pass: pass
  app_protocol: https
- app_host: http://www.payoneer.com
+ app_host: www.payoneer.com
 
  def_test_user: test@test.com
  def_test_pass: mypass
