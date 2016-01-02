@@ -6,7 +6,7 @@ module HomeSteps
   end
   # WHEN
 
-  step "I click sign up menu item on home page" do
+  step "I click sign up button on home page" do
     HomePage.given.open_sign_up_page
   end
 

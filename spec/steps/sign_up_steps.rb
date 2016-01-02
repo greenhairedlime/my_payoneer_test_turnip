@@ -1,6 +1,5 @@
 module SignUpSteps
 
-  attr_accessor :user
   step "fill in correct credentials in Getting Started section" do
     SignUpPage.fill_get_start(firstname: 'Test',
                              lastname: 'Kepler',
