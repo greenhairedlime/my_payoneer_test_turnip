@@ -1,122 +1,33 @@
 module SignUpSteps
 
   attr_accessor :user
-
-  step "I confirm account from confirmation email" do
-    ConfirmationInstructionEmail.
-        find_by_recipient(self.user.email).
-        confirm_my_account
+  step "fill in correct credentials in Getting Started section" do
+    SignUpPage.fill_get_start(firstname: 'Test',
+                             lastname: 'Kepler',
+                             email: settings.def_test_user,
+                             rtpemail: settings.def_test_user,
+                             month: '3',
+                             year: '1989',
+                             day: '22')
   end
 
-  step "I fill and submit form with blank all fields" do
-    SignUpPage.
-        given.
-        submit_form
+  step "fill in incorrect credentials in Getting Started section" do
+    SignUpPage.fill_get_start(firstname: 'Test',
+                              lastname: 'Kepler',
+                              email: settings.def_test_user,
+                              rtpemail: 'user@maiol.com',
+                              month: '3',
+                              year: '1989',
+                              day: '22')
   end
 
-  step "I fill and submit form with blank 'Password' and 'Password confirmation' fields" do
-    self.user=build(:user)
-    SignUpPage.
-        given.fill_form(
-        user_name: self.user.name ,
-        email: self.user.email,
-        password: "",
-        password_confirmation: "").submit_form
+  step "I see the alert message 'Please enter the same value again'" do
+    expect(SignUpPage.given.text).to include('Please enter the same value again')
   end
 
-  step "I fill and submit form with blank 'Email' field" do
-    self.user=build(:user)
-    SignUpPage.
-        given.fill_form(
-        user_name: self.user.name ,
-        email: "",
-        password: self.user.password,
-        password_confirmation: self.user.password).submit_form
+  step "click next button" do
+    SignUpPage.click_next('PersonalDetails')
   end
 
-  step "I fill and submit form with not email data in 'Email' field" do
-    self.user=build(:user)
-    SignUpPage.
-        given.fill_form(
-        user_name: self.user.name ,
-        email: "not_email_data",
-        password: self.user.password,
-        password_confirmation: self.user.password).submit_form
-  end
-
-  step "I fill and submit form with identical data less then 8 characters in 'Password' and 'Password confirmation' fields" do
-    self.user=build(:user)
-    SignUpPage.
-        given.fill_form(
-        user_name: self.user.name ,
-        email: self.user.email,
-        password: "1234567",
-        password_confirmation: "1234567").submit_form
-  end
-
-  step "I fill and submit form with not identical data in 'Password' and 'Password confirmation' fields" do
-    self.user=build(:user)
-    SignUpPage.
-        given.fill_form(
-        user_name: self.user.name ,
-        email: self.user.email,
-        password: self.user.password,
-        password_confirmation: "1234567").submit_form
-  end
-
-  step "I fill and submit form with email data which is already used by user in 'Email' field" do
-    SignUpPage.
-        given.fill_form(
-        user_name: self.user.name ,
-        email: self.user.email,
-        password: self.user.password,
-        password_confirmation: self.user.password).submit_form
-  end
-
-  # THEN
-
-
-
-  step "I should see info on home page that confirmation link has been sent to email address" do
-    expect(HomePage.given.text).to include('A message with a confirmation link has been sent to your email address. Please open the link to activate your account.')
-  end
-
-  step "I should receive confirmation email" do
-    ConfirmationInstructionEmail.
-        find_by_recipient(self.user.email)
-  end
-
-  step "I should see info on login page that account was successfully confirmed" do
-    expect(LoginPage.given.text).to include('Your account was successfully confirmed.')
-  end
-
-  step "I should see info on sign up page that email and password can't be blank" do
-    expect(SignUpPage.given.text).to include('Email can\'t be blank')
-    expect(SignUpPage.given.text).to include('Password can\'t be blank')
-  end
-
-  step "I should see info on sign up page that password can't be blank" do
-    expect(SignUpPage.given.text).to include('Password can\'t be blank')
-  end
-
-  step "I should see info on sign up page that email can't be blank" do
-    expect(SignUpPage.given.text).to include('Email can\'t be blank')
-  end
-
-  step "I should see info on sign up page that email data is incorrect" do
-    SignUpPage.given
-  end
-
-  step "I should see info on sign up page that password is too short" do
-    expect(SignUpPage.given.text).to include('Password is too short')
-  end
-
-  step "I should see info on sign up page that password confirmation doesn't match password" do
-    expect(SignUpPage.given.text).to include('Password confirmation doesn\'t match Password')
-  end
-
-  step "I should see info on sign up page that email has already been taken" do
-    expect(SignUpPage.given.text).to include('Email has already been taken')
-  end
 end
 RSpec.configure { |c| c.include SignUpSteps, sign_up_steps: true }
